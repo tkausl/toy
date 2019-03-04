@@ -54,14 +54,35 @@ void printhelp();
 // -1 on error
 int runstep();
 
-int main() {
+int main(int argc, char* argv[]) {
+	if(argc == 2) {
+		FILE* f = fopen(argv[1], "rb");
+		if(!f) {
+			printf("Could not open file '%s'\n", argv[1]);
+			return 1;
+		}
+		
+		fread(&pc, sizeof(pc), 1, f);
+		fread(&registers, sizeof(registers), 1, f);
+		fread(&memory, sizeof(memory), 1, f);
+		fclose(f);
+		
+		while(runstep() == 1);
+		
+		printf("\n\nPC = %02X\nRegisters:\n", pc);
+		printregisters();
+		printf("\nMemory:\n");
+		printmemory();
+		return 0;
+	}
+	
 	int arg0, arg1;
 	int num;
 	char* line = NULL; size_t linelen = 0;
-	while(getline(&line, &linelen, stdin)) {
-		if(!line) continue;
+	while(getline(&line, &linelen, stdin) >= 0) {
 		char* tok = strtok(line, " \n");
-		if(!tok) continue;
+		if(!tok || !*tok) continue;
+		
 		if(streq(tok, "m")) {
 			char* v1 = strtok(NULL, " \n");
 			if(v1) {
