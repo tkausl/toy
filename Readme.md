@@ -48,7 +48,7 @@ Assembler:
 
 asm.c contains a _very_ primitive assembler which assembles instructions to a machine state. Instructions are written using a syntax similar to intel assembly syntax.
 
-Usage: ./asm <source file>
+Usage: `./asm <source file>`
 
 Lines starting with a `;` are considered comments and ignored.
 
